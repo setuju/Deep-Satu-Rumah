@@ -1,0 +1,6 @@
+{
+  "name": "DeepTerm",
+  "description": "Terminal-based client, API server, and coding agent for DeepSeek Chat.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
