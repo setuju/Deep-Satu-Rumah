@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Terminal, Server, Play, Shield, Code, Cpu, ArrowRight, FileText, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Terminal, Server, Play, Shield, Code, Cpu, ArrowRight, FileText, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import AgentChat from './components/AgentChat';
 
 export default function App() {
-  const [activeTab, setActiveTab] = useState<'cli' | 'api' | 'wasm' | 'commands'>('cli');
+  const [activeTab, setActiveTab] = useState<'agent' | 'cli' | 'api' | 'wasm' | 'commands'>('agent');
 
   return (
     <div id="deepterm-root" className="min-h-screen bg-neutral-950 text-neutral-100 font-mono selection:bg-neutral-800">
@@ -20,6 +21,16 @@ export default function App() {
           </div>
 
           <nav id="deepterm-nav" className="flex items-center gap-1 bg-neutral-900 border border-neutral-800 p-1 rounded-lg">
+            <button
+              id="nav-agent"
+              onClick={() => setActiveTab('agent')}
+              className={`px-3 py-1.5 rounded-md text-xs transition-colors flex items-center gap-2 ${
+                activeTab === 'agent' ? 'bg-emerald-600 text-white font-medium shadow-sm' : 'text-neutral-400 hover:text-neutral-200'
+              }`}
+            >
+              <Sparkles className="w-3.5 h-3.5 text-emerald-300" />
+              Agent Chat
+            </button>
             <button
               id="nav-cli"
               onClick={() => setActiveTab('cli')}
@@ -104,6 +115,12 @@ export default function App() {
         </section>
 
         {/* Tab Content Display */}
+        {activeTab === 'agent' && (
+          <section id="tab-agent-content">
+            <AgentChat />
+          </section>
+        )}
+
         {activeTab === 'cli' && (
           <section id="tab-cli-content" className="space-y-4">
             <div className="flex items-center justify-between">

@@ -23,6 +23,23 @@ app.use(cors());
 app.use(express.json());
 
 // ------------------- Sesi Chat Endpoints -------------------
+app.get('/auth/verify', async (req, res) => {
+    const token = req.headers.authorization?.split(' ')[1];
+    if (!token) return res.status(401).json({ success: false, error: 'Missing token' });
+    try {
+        const data = await core.getCurrentProfile(token);
+        if (data && (data.code === 0 || data.data)) {
+            res.json({ success: true, profile: data.data || data });
+        } else if (data && data.msg) {
+            res.status(400).json({ success: false, error: data.msg });
+        } else {
+            res.status(400).json({ success: false, error: 'Invalid token or unauthorized' });
+        }
+    } catch (e) {
+        res.status(500).json({ success: false, error: e.message });
+    }
+});
+
 app.get('/sessions', async (req, res) => {
     const token = req.headers.authorization?.split(' ')[1];
     if (!token) return res.status(401).json({ error: 'Missing token' });
