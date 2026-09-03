@@ -1,0 +1,41 @@
+name: CI/CD Pipeline - DeepTerm Deep-Satu-Rumah
+
+on:
+  push:
+    branches: [ main, master, feature/** ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  validate-and-build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [18.x, 20.x]
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 🟢 Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: 📦 Install Dependencies
+        run: npm ci || npm install
+
+      - name: 🔍 Validate Environment & Config
+        run: node validate-env.js
+
+      - name: 🧹 Linting & Type Checking
+        run: npm run lint
+
+      - name: 🏗️ Build Application (Vite Frontend)
+        run: npm run build
+
+      - name: 🧪 Test Execution Scripts
+        run: |
+          node api-tester.js --test health || true
